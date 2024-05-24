@@ -43,5 +43,22 @@ namespace LibraryAPI.Controllers
 
             return Ok(await _context.Books.ToListAsync());
         }
+
+        [HttpPut]
+        public async Task<ActionResult<Book>> UpdateBook(Book updatedBook)
+        {
+            var dbBook = await _context.Books.FindAsync(updatedBook.Id);
+            if (dbBook is null)
+                return BadRequest("Book not found.");
+
+            dbBook.Title = updatedBook.Title;
+            dbBook.Author = updatedBook.Author;
+            dbBook.ISBN = updatedBook.ISBN;
+            dbBook.PublishedDate = updatedBook.PublishedDate;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.Books.ToListAsync());
+        }
     }
 }
