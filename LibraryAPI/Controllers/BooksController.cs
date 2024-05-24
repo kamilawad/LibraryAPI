@@ -24,5 +24,15 @@ namespace LibraryAPI.Controllers
 
             return Ok(books);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Book>> GetBook(int id)
+        {
+            var book = await _context.Books.FindAsync(id);
+            if (book is null)
+                return BadRequest("Book not found.");
+
+            return Ok(book);
+        }
     }
 }
