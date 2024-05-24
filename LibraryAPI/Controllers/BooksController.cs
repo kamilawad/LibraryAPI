@@ -41,13 +41,16 @@ namespace LibraryAPI.Controllers
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Books.ToListAsync());
+            return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
         }
 
-        [HttpPut]
-        public async Task<ActionResult<Book>> UpdateBook(Book updatedBook)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Book>> UpdateBook(int id, Book updatedBook)
         {
-            var dbBook = await _context.Books.FindAsync(updatedBook.Id);
+            if (id != updatedBook.Id)
+                return BadRequest();
+
+            var dbBook = await _context.Books.FindAsync(id);
             if (dbBook is null)
                 return BadRequest("Book not found.");
 
@@ -58,10 +61,10 @@ namespace LibraryAPI.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Books.ToListAsync());
+            return Ok(dbBook);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<Book>> DeleteBook(int id)
         {
             var dbBook = await _context.Books.FindAsync(id);
@@ -71,7 +74,7 @@ namespace LibraryAPI.Controllers
            _context.Books.Remove(dbBook);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Books.ToListAsync());
+            return Ok(dbBook);
         }
     }
 }
