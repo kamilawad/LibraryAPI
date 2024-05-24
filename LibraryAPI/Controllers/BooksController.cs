@@ -34,5 +34,14 @@ namespace LibraryAPI.Controllers
 
             return Ok(book);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Book>> AddBook(Book book)
+        {
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.Books.ToListAsync());
+        }
     }
 }
