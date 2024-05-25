@@ -1,13 +1,16 @@
 ﻿using LibraryAPI.Data;
 using LibraryAPI.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.Swagger.Annotations;
 
 namespace LibraryAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly LibraryContext _context;
@@ -18,7 +21,7 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Book>>> GetAllBooks()
+        public async Task<ActionResult<IEnumerable<Book>>> GetAllBooks()
         {
             var books = await _context.Books.ToListAsync();
 
@@ -47,9 +50,6 @@ namespace LibraryAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<Book>> UpdateBook(int id, Book updatedBook)
         {
-            if (id != updatedBook.Id)
-                return BadRequest();
-
             var dbBook = await _context.Books.FindAsync(id);
             if (dbBook is null)
                 return BadRequest("Book not found.");
