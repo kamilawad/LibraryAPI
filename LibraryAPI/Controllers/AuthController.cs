@@ -23,7 +23,25 @@ namespace LibraryAPI.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     POST /api/Auth/register
+        ///     {
+        ///         "Username": "Kamil Awad",
+        ///         "Password": "password123"
+        ///     }
+        /// </remarks>
+        /// <param name="userDTO">The user registration details.</param>
+        /// <returns>Status code 201 if the user is created, 400 if the username is already taken.</returns>
+        /// <response code="201">User created.</response>
+        /// <response code="400">Username is already taken.</response>
         [HttpPost("register")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Register(UserDTO userDTO)
         {
             if (await _context.Users.AnyAsync(u => u.Username == userDTO.Username))
@@ -40,10 +58,28 @@ namespace LibraryAPI.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return StatusCode(201, "User created.");
         }
 
+        /// <summary>
+        /// Authenticates a user and returns a JWT token.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     POST /api/Auth/login
+        ///     {
+        ///         "Username": "Kamil Awad",
+        ///         "Password": "password123"
+        ///     }
+        /// </remarks>
+        /// <param name="userDTO">The user login details.</param>
+        /// <returns>A JWT token if authentication is successful.</returns>
+        /// <response code="200">Returns the JWT token.</response>
+        /// <response code="401">Invalid username or password.</response>
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login(UserDTO userDTO)
         {
             var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == userDTO.Username);
