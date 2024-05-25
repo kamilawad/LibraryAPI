@@ -61,8 +61,8 @@ namespace LibraryAPI.Controllers
         ///     Post api/Books
         ///     {
         ///         "Title": "My 60 Memorable Games",
-        ///         "Author": "Bobby Fischer"
-        ///         "ISBN" = "978-1906388300",
+        ///         "Author": "Bobby Fischer",
+        ///         "ISBN": "978-1906388300",
         ///         "PublishedDate": "1969-01-01T00:00:00"
         ///     }
         /// </remarks>
@@ -103,12 +103,12 @@ namespace LibraryAPI.Controllers
         /// </remarks>
         /// <param name="id">The ID of the book to update.</param>
         /// <param name="updatedBook">The updated book details.</param>
-        /// <returns>The updated book.</returns>
-        /// <response code="200">Returns the updated book.</response>
+        /// <returns>No content</returns>
+        /// <response code="204">Book updated successfully</response>
         /// <response code="400">If the book details are invalid.</response>
         /// <response code="404">If the book is not found.</response>
         [HttpPut("{id}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<Book>> UpdateBook(int id, Book updatedBook)
@@ -129,7 +129,7 @@ namespace LibraryAPI.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(dbBook);
+            return NoContent();
         }
 
         /// <summary>
