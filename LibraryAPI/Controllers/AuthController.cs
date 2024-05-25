@@ -31,8 +31,8 @@ namespace LibraryAPI.Controllers
         /// 
         ///     POST /api/Auth/register
         ///     {
-        ///         "Username": "Kamil Awad",
-        ///         "Password": "password123"
+        ///         "username": "Kamil Awad",
+        ///         "password": "password123"
         ///     }
         /// </remarks>
         /// <param name="userDTO">The user registration details.</param>
@@ -69,8 +69,8 @@ namespace LibraryAPI.Controllers
         /// 
         ///     POST /api/Auth/login
         ///     {
-        ///         "Username": "Kamil Awad",
-        ///         "Password": "password123"
+        ///         "username": "Kamil Awad",
+        ///         "password": "password123"
         ///     }
         /// </remarks>
         /// <param name="userDTO">The user login details.</param>
