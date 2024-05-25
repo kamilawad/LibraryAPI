@@ -41,6 +41,11 @@ namespace LibraryAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> AddBook(Book book)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
@@ -50,6 +55,11 @@ namespace LibraryAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<Book>> UpdateBook(int id, Book updatedBook)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var dbBook = await _context.Books.FindAsync(id);
             if (dbBook is null)
                 return BadRequest("Book not found.");
