@@ -1,4 +1,5 @@
 ﻿using LibraryAPI.Data;
+using LibraryAPI.DTOs;
 using LibraryAPI.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,18 +24,30 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(User user)
+        public async Task<IActionResult> Register(UserDTO userDTO)
         {
+            if (await _context.Users.AnyAsync(u => u.Username == userDTO.Username))
+            {
+                return BadRequest("Username is already taken.");
+            }
+
+            var user = new User
+            {
+                Username = userDTO.Username
+            };
+            user.HashPassword(userDTO.Password);
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
             return Ok();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(User user)
+        public async Task<IActionResult> Login(UserDTO userDTO)
         {
-            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username && u.Password == user.Password);
-            if (dbUser == null)
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == userDTO.Username);
+            if (dbUser == null || !dbUser.VerifyPassword(userDTO.Password))
                 return Unauthorized();
 
             var tokenHandler = new JwtSecurityTokenHandler();

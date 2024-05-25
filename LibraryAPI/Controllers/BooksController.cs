@@ -33,8 +33,7 @@ namespace LibraryAPI.Controllers
         {
             var book = await _context.Books.FindAsync(id);
             if (book is null)
-                return BadRequest("Book not found.");
-
+                return NotFound("Book not found");
             return Ok(book);
         }
 
@@ -62,7 +61,7 @@ namespace LibraryAPI.Controllers
 
             var dbBook = await _context.Books.FindAsync(id);
             if (dbBook is null)
-                return BadRequest("Book not found.");
+                return NotFound("Book not found.");
 
             dbBook.Title = updatedBook.Title;
             dbBook.Author = updatedBook.Author;
@@ -79,7 +78,7 @@ namespace LibraryAPI.Controllers
         {
             var dbBook = await _context.Books.FindAsync(id);
             if (dbBook is null)
-                return BadRequest("Book not found.");
+                return NotFound("Book not found.");
 
            _context.Books.Remove(dbBook);
             await _context.SaveChangesAsync();
